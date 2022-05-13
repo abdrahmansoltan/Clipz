@@ -10,7 +10,7 @@
 <div align="center">
 
 <a href="#">
-    <img src="./img/logo.png" alt="Logo" height="60"  >
+    <img src="./img/logo.PNG" alt="Logo" height="60"  >
   </a>
   
   <h2 align="center">Clipz</h2>
@@ -100,13 +100,11 @@ This project require some prequesites and dependenscies to be installed, you can
    ng serve
    ```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
----
-
 ### Ports
 
 - Development Server runs on port `4200`
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ---
 
