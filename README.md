@@ -1,5 +1,7 @@
 # Clipz
 
+![60%](https://progress-bar.dev/60/?title=Done)
+
 <div id="top"></div>
 
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
@@ -9,10 +11,6 @@
 <!-- PROJECT LOGO -->
 <div align="center">
 
-<a href="#">
-    <img src="./img/logo.PNG" alt="Logo" height="60"  >
-  </a>
-  
   <h2 align="center">Clipz</h2>
 
   <p align="center">
