@@ -4,9 +4,10 @@ import {
   AngularFirestore,
   AngularFirestoreCollection,
 } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import IUser from '../models/user.model';
-import { delay, map } from 'rxjs/operators';
+import { delay, map, filter, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -15,14 +16,31 @@ export class AuthService {
   private usersCollection: AngularFirestoreCollection<IUser>;
   public isAuthenticated$: Observable<boolean>;
   public isAuthenticatedWithDelay$: Observable<boolean>;
+  private redirect: boolean = false;
 
-  constructor(private auth: AngularFireAuth, private db: AngularFirestore) {
+  constructor(
+    private auth: AngularFireAuth,
+    private db: AngularFirestore,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.usersCollection = db.collection('users');
 
     // RxJS
     this.isAuthenticated$ = auth.user.pipe(map((user) => !!user));
     // to delay modal-destroy after success
     this.isAuthenticatedWithDelay$ = this.isAuthenticated$.pipe(delay(1000));
+
+    // Retrieving data outside the outlet when the router finish navigation
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        map((e) => this.route.firstChild),
+        switchMap((route) => route?.data ?? of({}))
+      )
+      .subscribe((data) => {
+        this.redirect = data['authOnly'] ?? false;
+      });
   }
 
   public async createUser(userData: IUser) {
@@ -50,5 +68,16 @@ export class AuthService {
     await userCred.user.updateProfile({
       displayName: userData.name,
     });
+  }
+
+  public async logout($event?: Event) {
+    if ($event) $event.preventDefault(); // so that the page doesn't go to route: '#'
+
+    await this.auth.signOut();
+
+    // only redirect to home page from manage-page
+    if (this.redirect) {
+      await this.router.navigateByUrl('/');
+    }
   }
 }
